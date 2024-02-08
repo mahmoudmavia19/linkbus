@@ -13,6 +13,6 @@ class StudentLoginController extends GetxController {
   }
 
   void login() async{
-
+    Get.toNamed(AppRoutes.studentMainScreen);
   }
 }

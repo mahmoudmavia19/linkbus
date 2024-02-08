@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import '../../core/app_export.dart';
 
@@ -47,6 +46,10 @@ class ThemeHelper {
     var colorScheme =
         _supportedColorScheme[_appTheme] ?? ColorSchemes.primaryColorScheme;
     return ThemeData(
+      appBarTheme: AppBarTheme(
+        elevation: 1.0,
+        centerTitle: true
+      ),
       visualDensity: VisualDensity.standard,
       colorScheme: colorScheme,
       textTheme: TextThemes.textTheme(colorScheme),
@@ -98,7 +101,7 @@ class ThemeHelper {
 class TextThemes {
   static TextTheme textTheme(ColorScheme colorScheme) => TextTheme(
         bodyLarge: TextStyle(
-          color: colorScheme.onPrimary.withOpacity(0.4),
+         // color: colorScheme.onPrimary.withOpacity(0.4),
           fontSize: 18.fSize,
           fontFamily: 'Poppins',
           fontWeight: FontWeight.w400,

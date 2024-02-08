@@ -22,7 +22,7 @@ class TextFieldWidget extends StatelessWidget {
       decoration: InputDecoration(
         labelText: labelText,
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(25.0),
+          borderRadius: BorderRadius.circular(15.0),
         ),
          suffixIcon: suffixIcon,
       ),

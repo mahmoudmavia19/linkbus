@@ -13,11 +13,6 @@ class ButtonWidget extends StatelessWidget {
     return Container(
       width: double.infinity,
       height: 50.0,
-      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-      decoration: BoxDecoration(
-        color:theme.primaryColor,
-        borderRadius: BorderRadius.circular(25),
-      ),
       child: ElevatedButton(
         onPressed: onPressed,
         child: Text(text,

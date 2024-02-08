@@ -4,7 +4,7 @@ import '../../../../core/app_export.dart';
 import '../../../../core/utils/app_strings.dart';
 import '../../../../widgets/custom_button.dart';
 import '../../../../widgets/custom_text_form_field.dart';
-import 'controller/driver_controller.dart';
+import 'controller/auth_controller.dart';
 
 class StudentLoginPage extends GetWidget<StudentLoginController> {
   @override

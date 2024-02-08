@@ -10,6 +10,7 @@ class ImageConstant {
       '$imagePath/img_logo_gray_50_01_120x114.svg';
 
   static String imageNotFound = 'assets/images/image_not_found.png';
+  static String service = 'assets/images/service.png';
 }
 
 class AppLottie {
