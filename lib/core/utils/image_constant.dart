@@ -14,4 +14,7 @@ class ImageConstant {
 
 class AppLottie {
    static String hand = 'assets/json/hand.json';
+   static String traking = 'assets/json/traking.json';
+   static String scheduling = 'assets/json/scheduling.json';
+   static String driver = 'assets/json/driver.json';
 }
