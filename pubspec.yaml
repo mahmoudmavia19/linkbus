@@ -16,7 +16,8 @@ dependencies:
   google_maps_flutter: ^2.5.3
   location: ^5.0.3
   geocoding: ^2.1.1
-dev_dependencies: 
+  concentric_transition: ^1.0.3
+dev_dependencies:
   flutter_test: 
     sdk: flutter
 flutter: 

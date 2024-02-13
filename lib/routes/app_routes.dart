@@ -11,6 +11,7 @@ import 'package:linkbus/presentation/student/trip_trafic/binding/trip_binding.da
 
 import '../presentation/driver/auth/login/binding/driver_login_binding.dart';
 import '../presentation/driver/auth/login/driver_login_screen.dart';
+import '../presentation/onboarding/onboarding_screen.dart';
 import '../presentation/student/help_screen/binding/help_binding.dart';
 import '../presentation/student/help_screen/help_screen.dart';
 import '../presentation/student/main/binding/main_binding.dart';
@@ -18,6 +19,7 @@ import '../presentation/student/main/main_screen.dart';
 
 class AppRoutes {
   static const String initialRoute = '/initialRoute';
+  static const String onBoardingScreen = '/onBoardingScreen';
   static const String chooseUserTypeScreen = '/chooseUserTypeScreen';
   static const String  studentLoginScreen = '/student/studentLoginScreen';
   static const String  driverLoginScreen = '/driver/driverLoginScreen';
@@ -31,6 +33,10 @@ class AppRoutes {
       bindings: [
         SplashBinding(),
       ],
+    ),
+    GetPage (
+      name:onBoardingScreen,
+      page: () => OnBoardingScreen(),
     ),
     GetPage (
       name:chooseUserTypeScreen,
