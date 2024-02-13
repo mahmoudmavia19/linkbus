@@ -69,7 +69,16 @@ class ThemeHelper {
           padding: EdgeInsets.zero,
         ),
       ),
-
+      bottomNavigationBarTheme: BottomNavigationBarThemeData(
+          selectedIconTheme: IconThemeData(
+            color: colorScheme.primary,
+              size: 30
+          ),
+          unselectedIconTheme: IconThemeData(
+            color:Colors.grey,
+             size: 30
+          ),
+      ),
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
           backgroundColor: Colors.transparent,

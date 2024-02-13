@@ -1,11 +1,10 @@
+import 'dart:ui';
+
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import '../../presentation/student/help_screen/model/model.dart';
 
 LatLng startMapLocation =  LatLng(24.774265, 46.738586);
-
-
-
 class HelpData {
   static List<HelpQuestion> studentQuestions = [
     HelpQuestion(
@@ -53,9 +52,6 @@ class HelpData {
     ),
   ];
 }
-
-import 'dart:ui';
-
 List<Color> appColorsDigress = [
   Color(0xFFFFFFFF),
   Color(0xFFFFDA58),

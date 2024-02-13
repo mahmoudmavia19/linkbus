@@ -16,5 +16,6 @@ class AppStrings {
   static const String trip = 'trip';
   static const String help = 'Help';
   static const String remaining = 'Remaining';
+  static const String notification = 'Notification';
 
 }

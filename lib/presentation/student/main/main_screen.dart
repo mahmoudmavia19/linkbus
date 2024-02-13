@@ -18,15 +18,13 @@ class MainScreen extends GetWidget<MainController>{
           Image.asset(ImageConstant.imgLogo,width:100,fit: BoxFit.cover,),
         ],
       ),
-      body:Expanded(
-        child: PageView.builder(
-          controller:  controller.pageController,
-          physics: NeverScrollableScrollPhysics(),
-            itemBuilder:(context, index) => controller.screens[index],
-          onPageChanged: (value) {
-            controller.currentIndex.value = value;
-          },
-        ),
+      body:PageView.builder(
+        controller:  controller.pageController,
+        physics: NeverScrollableScrollPhysics(),
+          itemBuilder:(context, index) => controller.screens[index],
+        onPageChanged: (value) {
+          controller.currentIndex.value = value;
+        },
       ) ,
       bottomNavigationBar: Obx(()=>BottomNavigationBar(
         currentIndex: controller.currentIndex.value,
@@ -38,6 +36,7 @@ class MainScreen extends GetWidget<MainController>{
           items:[
           BottomNavigationBarItem(icon: Icon(Icons.home),label: AppStrings.home),
           BottomNavigationBarItem(icon: Icon(Icons.location_on_outlined),label: AppStrings.location),
+          BottomNavigationBarItem(icon: Icon(Icons.notifications),label: AppStrings.notification),
           BottomNavigationBarItem(icon: Icon(Icons.map),label: AppStrings.map),
         ]),
       ),
