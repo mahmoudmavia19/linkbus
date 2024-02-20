@@ -13,9 +13,13 @@ class AppStrings {
   static const String save = 'Save';
   static const String morningTripSchedule = 'Morning Trip Schedule';
   static const String eveningTripSchedule = 'Evening Trip Schedule';
+  static const String scheduleUpcomingTrips = 'Schedule Your Upcoming Trips';
   static const String trip = 'trip';
   static const String help = 'Help';
   static const String remaining = 'Remaining';
   static const String notification = 'Notification';
+  static const String start = 'Start';
+  static const String end = 'End';
+  static const String done = 'Done';
 
 }

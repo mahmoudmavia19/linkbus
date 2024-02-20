@@ -95,6 +95,28 @@ class HomeScreen extends StatelessWidget {
                 ),
               ),
             ),
+            SizedBox(height: 50.0,),
+            Align(
+              alignment: Alignment.center,
+              child: SizedBox(
+                width: 150,
+                child: TextButton(onPressed: (){
+                   Get.offAllNamed(AppRoutes.chooseUserTypeScreen);
+                } ,
+                    style: TextButton.styleFrom(
+                        backgroundColor: Colors.grey[200],
+                        foregroundColor: Colors.red
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(Icons.logout),
+                        SizedBox(width: 10.0,),
+                        Text('Logout'),
+                      ],
+                    )),
+              ),
+            )
           ]
         ),
       )

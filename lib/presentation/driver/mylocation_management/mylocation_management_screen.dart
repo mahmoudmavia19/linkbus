@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:linkbus/core/constants/constant.dart';
 import 'package:linkbus/core/utils/app_strings.dart';
-import 'package:linkbus/presentation/student/mylocation_management/controller/my_location_controller.dart';
 
 import '../../../core/app_export.dart';
+import 'controller/my_location_controller.dart';
 
-class MyLocationManagementScreen extends GetWidget<MyLocationController>{
+class DriverLocationManagementScreen extends GetWidget<DriverMyLocationController>{
   @override
   Widget build(BuildContext context) {
     return  Scaffold(
@@ -18,10 +18,9 @@ class MyLocationManagementScreen extends GetWidget<MyLocationController>{
              ),),
              trailing: TextButton(onPressed: () {
                
-             },
-                 style: TextButton.styleFrom(
+             }, style: TextButton.styleFrom(
                    backgroundColor: theme.primaryColor,
-                   foregroundColor: Colors.white
+                    foregroundColor: Colors.white
                  ),
                  child: Text(AppStrings.save)),
              subtitle:Row(
