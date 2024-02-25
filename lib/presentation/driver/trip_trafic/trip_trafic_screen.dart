@@ -40,7 +40,7 @@ class DriverTripTraficScreen extends GetWidget<DriverTripTraficController> {
                       ),
                       child: Column(
                         children: [
-                          Text('My Be arrived at',style: TextStyle(fontSize: 14.0,fontWeight: FontWeight.bold) ),
+                          Text('Trip my be ended at',style: TextStyle(fontSize: 14.0,fontWeight: FontWeight.bold) ),
                           SizedBox(height: 5.0,),
                           Text('02:00 PM')
                         ],

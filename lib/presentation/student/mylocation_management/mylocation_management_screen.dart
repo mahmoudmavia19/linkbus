@@ -70,6 +70,21 @@ class MyLocationManagementScreen extends GetWidget<MyLocationController>{
           ),
         ],
       ),
+       floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
+      floatingActionButton: SizedBox(
+        width: 200,
+        height: 50,
+        child: ElevatedButton(onPressed: () {
+          controller.address.value = '';
+        },child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.location_disabled),
+            SizedBox(width: 10.0,) ,
+            Text('Remove Location')
+          ],
+        ),),
+      ),
     );
   }
 }

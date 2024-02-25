@@ -7,7 +7,7 @@ class DriverMainScreen extends GetWidget<DriverMainController>{
   Widget build(BuildContext context) {
     return  Scaffold(
       appBar: AppBar(
-        title: Text(AppStrings.appName),
+        title: Text('Hi name'),
         leading:IconButton(onPressed: () {
           Get.toNamed(AppRoutes.driverHelpScreen);
         }, icon: Image.asset(ImageConstant.service),),

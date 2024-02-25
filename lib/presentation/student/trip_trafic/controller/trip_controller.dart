@@ -91,7 +91,7 @@ class TripTraficController extends GetxController {
       });
      // print(calculateDistance(LatLng(startLocation.value.latitude!, startLocation.value.longitude!), LatLng(endLocation.value.latitude!, endLocation.value.longitude!)));
       if(calculateDistance(LatLng(startLocation.value.latitude!, startLocation.value.longitude!), LatLng(endLocation.value.latitude!, endLocation.value.longitude!)) == 105.13223958075635){
-        Get. snackbar('Trip Alert', 'Trip very close');
+        Get. snackbar('Trip Alert', 'The driver is close to your home');
       }
       calculateTravelTime(LatLng(startLocation.value.latitude!, startLocation.value.longitude!), LatLng(endLocation.value.latitude!, endLocation.value.longitude!));
     }   else {

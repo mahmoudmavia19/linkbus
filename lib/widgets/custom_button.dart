@@ -1,6 +1,5 @@
 
 import 'package:flutter/material.dart';
-import 'package:linkbus/core/app_export.dart';
 
 class ButtonWidget extends StatelessWidget {
   final VoidCallback onPressed;

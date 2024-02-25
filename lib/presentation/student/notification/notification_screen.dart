@@ -14,11 +14,11 @@ class NotificationScreen extends StatelessWidget {
           children: [
             ListTile(
               leading: Icon(Icons.location_on,size: 30,),
-              title: Text('trip $index',style: TextStyle(color: theme.primaryColor,fontWeight: FontWeight.bold),),
+              title: Text('trip to PNU',style: TextStyle(color: theme.primaryColor,fontWeight: FontWeight.bold),),
               subtitle: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Trip number $index is started',),
+                  Text('Trip number ${index + 1} is started',),
                   Row(
                     children: [
                       Text(DateFormat.yMMMd().format(DateTime.now()),style: TextStyle(color:Colors.grey,fontSize: 12),),

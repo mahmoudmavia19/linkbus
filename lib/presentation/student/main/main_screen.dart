@@ -10,7 +10,7 @@ class MainScreen extends GetWidget<MainController>{
   Widget build(BuildContext context) {
     return  Scaffold(
       appBar: AppBar(
-        title: Text(AppStrings.appName),
+        title: Text('Hi name'),
         leading:IconButton(onPressed: () {
           Get.toNamed(AppRoutes.studentHelpScreen);
         }, icon: Image.asset(ImageConstant.service),),
