@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:linkbus/core/utils/state_renderer/state_renderer_impl.dart';
 
 import '../../../../core/app_export.dart';
 import '../../../../core/utils/app_strings.dart';
@@ -9,17 +10,20 @@ import 'controller/auth_controller.dart';
 class StudentLoginPage extends GetWidget<StudentLoginController> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(AppStrings.student),
-        centerTitle: true,
-        leading: IconButton(
-          onPressed: () {
-            Get.back();
-          },
-            icon: Icon(Icons.arrow_back_ios)),
+    return Obx(()=>Scaffold(
+        appBar: AppBar(
+          title: Text(AppStrings.student),
+          centerTitle: true,
+          leading: IconButton(
+            onPressed: () {
+              Get.back();
+            },
+              icon: Icon(Icons.arrow_back_ios)),
+        ),
+        body: controller.state.value.getScreenWidget( LoginScreenUI(loginController: controller), (){
+          controller.login();
+        }),
       ),
-      body: LoginScreenUI(loginController: controller),
     );
   }
 }

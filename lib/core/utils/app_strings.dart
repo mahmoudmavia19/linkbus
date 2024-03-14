@@ -7,8 +7,11 @@ class AppStrings {
   static const String usernameOrEmail = 'Email';
   static const String password = 'Password';
   static const String login = 'Login';
+  static const String loading = 'Loading';
   static const String home = 'Home' ;
   static const String location = 'Location';
+  static const String retryAgain = 'Retry Again';
+  static const String yes = 'Yes';
   static const String map = 'Map' ;
   static const String save = 'Save';
   static const String morningTripSchedule = 'Morning Trip Schedule';
@@ -21,5 +24,7 @@ class AppStrings {
   static const String start = 'Start';
   static const String end = 'End';
   static const String done = 'Done';
+  static const String noPassenger = 'This User Not Have A Passenger';
+  static const String noDriver = 'This Passenger Not Have A Driver';
 
 }

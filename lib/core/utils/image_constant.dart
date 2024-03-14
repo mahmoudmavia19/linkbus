@@ -18,4 +18,7 @@ class AppLottie {
    static String traking = 'assets/json/traking.json';
    static String scheduling = 'assets/json/scheduling.json';
    static String driver = 'assets/json/driver.json';
+   static String loading = 'assets/json/driver.json';
+   static String error = 'assets/json/driver.json';
+   static String success = 'assets/json/driver.json';
 }

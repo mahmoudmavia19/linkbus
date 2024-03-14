@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "835228978488",
+    "project_id": "link-bus-2583e",
+    "storage_bucket": "link-bus-2583e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:835228978488:android:fdd94693f49aa7405a85cd",
+        "android_client_info": {
+          "package_name": "com.linkbus.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAp187NcpciUAWkS0J-BGLdNVwfE3QLX6A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
