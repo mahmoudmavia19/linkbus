@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:linkbus/core/app_export.dart';
+import 'package:linkbus/presentation/student/home_screen/controller/home_controller.dart';
 import 'package:linkbus/presentation/student/main/controller/main_controller.dart';
 
 import '../../../core/utils/app_strings.dart';
 
 class MainScreen extends GetWidget<MainController>{
-
+  HomeController homeController = Get.find();
   @override
   Widget build(BuildContext context) {
     return  Scaffold(
       appBar: AppBar(
-        title: Text('Hi name'),
+        title: Text('Hi ${homeController.passenger?.name??''}'),
         leading:IconButton(onPressed: () {
           Get.toNamed(AppRoutes.studentHelpScreen);
         }, icon: Image.asset(ImageConstant.service),),

@@ -16,6 +16,7 @@ class InitialBindings extends Bindings {
     FirebaseAuth auth = FirebaseAuth.instance;
     FirebaseFirestore firestore = FirebaseFirestore.instance;
     Get.put(ApiClient(auth, firestore));
+    //Get.find<ApiClient>().sendTrips();
     Get.put(ApiDriverClient(auth, firestore));
     Get.put(NetworkInfo(connectivity));
     Get.put(DriverRemoteDataSourceImpl(Get.find(), Get.find()));

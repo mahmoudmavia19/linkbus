@@ -8,8 +8,10 @@ import 'package:linkbus/presentation/splash_screen/binding/splash_binding.dart';
 import 'package:linkbus/presentation/splash_screen/splash_screen.dart';
 import 'package:linkbus/presentation/student/auth/login/binding/student_login_binding.dart';
 import 'package:linkbus/presentation/student/auth/login/student_login_screen.dart';
+import 'package:linkbus/presentation/student/home_screen/binding/home_binding.dart';
 import 'package:linkbus/presentation/student/mylocation_management/binding/my_location_binding.dart';
 import 'package:linkbus/presentation/student/mylocation_management/mylocation_management_screen.dart';
+import 'package:linkbus/presentation/student/notification/binding/notification_binding.dart';
 import 'package:linkbus/presentation/student/trip_trafic/binding/trip_binding.dart';
 
 import '../presentation/driver/auth/login/binding/driver_login_binding.dart';
@@ -72,8 +74,10 @@ class AppRoutes {
       page: () => MainScreen(),
       bindings:[
         MainBinding(),
+        HomeBinding(),
         MyLocationBinding(),
-        TripBinding()
+        TripBinding(),
+        NotificationBinding(),
       ]
      ),
     GetPage (

@@ -14,7 +14,7 @@ class AppStrings {
   static const String yes = 'Yes';
   static const String map = 'Map' ;
   static const String save = 'Save';
-  static const String morningTripSchedule = 'Morning Trip Schedule';
+  static const String morningTripSchedule = 'Trip Schedule';
   static const String eveningTripSchedule = 'Evening Trip Schedule';
   static const String scheduleUpcomingTrips = 'Schedule Your Upcoming Trips';
   static const String trip = 'trip';

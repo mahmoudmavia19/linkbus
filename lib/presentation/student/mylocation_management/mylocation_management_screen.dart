@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:linkbus/core/constants/constant.dart';
 import 'package:linkbus/core/utils/app_strings.dart';
+import 'package:linkbus/core/utils/state_renderer/state_renderer_impl.dart';
 import 'package:linkbus/presentation/student/mylocation_management/controller/my_location_controller.dart';
 
 import '../../../core/app_export.dart';
@@ -12,27 +13,7 @@ class MyLocationManagementScreen extends GetWidget<MyLocationController>{
     return  Scaffold(
       body:Column(
         children: [
-          ListTile(
-             title: Text('My House',style: TextStyle(
-               fontWeight: FontWeight.bold
-             ),),
-             trailing: TextButton(onPressed: () {
-               
-             },
-                 style: TextButton.styleFrom(
-                   backgroundColor: theme.primaryColor,
-                   foregroundColor: Colors.white
-                 ),
-                 child: Text(AppStrings.save)),
-             subtitle:Row(
-               mainAxisSize: MainAxisSize.min,
-               children: [
-                 Icon(Icons.location_on,color: theme.primaryColor,),
-                 SizedBox(width: 10.0,),
-                 Obx(()=> Expanded(child: Text(controller.address.value))),
-               ],
-             ),
-          ),
+          Obx(() => controller.state.value.getScreenWidget(_body(), (){})),
           Expanded(
             child: Obx(() {
               return Container(
@@ -76,6 +57,7 @@ class MyLocationManagementScreen extends GetWidget<MyLocationController>{
         height: 50,
         child: ElevatedButton(onPressed: () {
           controller.address.value = '';
+          controller.passenger?.location = null ;
         },child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -84,6 +66,30 @@ class MyLocationManagementScreen extends GetWidget<MyLocationController>{
             Text('Remove Location')
           ],
         ),),
+      ),
+    );
+  }
+
+  _body() {
+    return  ListTile(
+      title: Text('My House',style: TextStyle(
+          fontWeight: FontWeight.bold
+      ),), 
+      trailing: TextButton(onPressed: () {
+        controller.saveMyLocation();
+      },
+          style: TextButton.styleFrom(
+              backgroundColor: theme.primaryColor,
+              foregroundColor: Colors.white
+          ),
+          child: Text(AppStrings.save)),
+      subtitle:Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(Icons.location_on,color: theme.primaryColor,),
+          SizedBox(width: 10.0,),
+          Obx(()=> Expanded(child: Text(controller.address.value))),
+        ],
       ),
     );
   }
