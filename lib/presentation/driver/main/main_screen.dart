@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:linkbus/core/app_export.dart';
+import 'package:linkbus/presentation/driver/trips/controller/driver_trips_controller.dart';
 import '../../../core/utils/app_strings.dart';
 import 'controller/main_controller.dart';
 class DriverMainScreen extends GetWidget<DriverMainController>{
@@ -7,7 +8,7 @@ class DriverMainScreen extends GetWidget<DriverMainController>{
   Widget build(BuildContext context) {
     return  Scaffold(
       appBar: AppBar(
-        title: Text('Hi name'),
+        title: Obx(()=>Text('Hi ${Get.find<DriverTripsController>().driver.value?.name??''}')),
         leading:IconButton(onPressed: () {
           Get.toNamed(AppRoutes.driverHelpScreen);
         }, icon: Image.asset(ImageConstant.service),),

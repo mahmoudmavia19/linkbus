@@ -1,9 +1,13 @@
 
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/material.dart';
 import 'package:linkbus/core/utils/state_renderer/state_renderer.dart';
 import 'package:linkbus/core/utils/state_renderer/state_renderer_impl.dart';
 import 'package:linkbus/data/models/passenger.dart';
 import 'package:linkbus/data/models/trip.dart';
 import 'package:linkbus/data/remote_date_source/passenger_remote_data_source.dart';
+import 'package:linkbus/presentation/student/trip_trafic/controller/trip_controller.dart';
+import 'package:location/location.dart';
 
 import '../../../../core/app_export.dart';
 
@@ -15,6 +19,19 @@ class HomeController extends GetxController {
 
   onInit() async{
     await getPassenger();
+    FirebaseMessaging.onMessage.listen((RemoteMessage event) {
+      print("message received");
+      print(event.notification!.body);
+      Get.dialog(AlertDialog(
+          title:Text('Notification'),
+          content:
+          Text(event.notification!.body!)));
+      getTrips();
+    });
+    FirebaseMessaging.onMessageOpenedApp.listen((message) {
+      print('Message clicked!');
+      getTrips();
+    });
     super.onInit();
   }
 
@@ -31,9 +48,11 @@ class HomeController extends GetxController {
   updateTrip(Trip trip) async{
     if(trip.selected){
       trip.passengers.add(passenger!.uid!);
+      FirebaseMessaging.instance.subscribeToTopic(trip.uid!);
     }
     else{
       trip.passengers.remove(passenger!.uid!);
+      FirebaseMessaging.instance.unsubscribeFromTopic(trip.uid!);
     }
     print(trip.toJson());
     print(trip.selected);
@@ -49,9 +68,26 @@ class HomeController extends GetxController {
      (await remoteDataSource.getTrips()).fold((failure) {
       state.value = ErrorState(StateRendererType.fullScreenErrorState, failure.message);
     }, (result) {
-      result.forEach((element) {
+      result.forEach((element)async {
         element.selected = element.passengers.contains(passenger?.uid);
-        trips.add(element);
+        trips.value = result;
+        if(element.started) {
+          Get
+              .find<TripTraficController>()
+              .trip
+              .value = element;
+          Get.find<TripTraficController>().startLocation .value =LocationData.fromMap({
+            'latitude': element.startLocation!.latitude,
+            'longitude': element.startLocation!.longitude,
+          });
+          Get.find<TripTraficController>().endLocation.value =LocationData.fromMap({
+            'latitude': element.endLocation!.latitude,
+            'longitude': element.endLocation!.longitude,
+          });
+          await Get.find<TripTraficController>().getPolyPoints();
+          await Get.find<TripTraficController>().startDriverTracking();
+
+        }
       });
       state.value = ContentState();
     });

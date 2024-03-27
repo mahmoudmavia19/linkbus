@@ -1,6 +1,7 @@
  import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
   import 'package:linkbus/core/app_export.dart';
+import 'package:linkbus/data/models/driver.dart';
 import 'package:linkbus/data/models/passenger.dart';
 
 import '../models/notification.dart';
@@ -42,6 +43,13 @@ class ApiClient extends GetConnect {
         .toList());
   }
 
+  Stream<Driver> getDriverStream(driverId) {
+    return firestore
+        .collection('drivers')
+        .doc(driverId)
+        .snapshots()
+        .map((doc) => Driver.fromJson(doc.data()!));
+  }
 
   Future<Passenger> getPassenger() async {
     var result = await firestore.collection('passengers').doc(auth.currentUser!.uid).get();

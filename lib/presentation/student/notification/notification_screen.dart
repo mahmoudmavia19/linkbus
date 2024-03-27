@@ -15,32 +15,37 @@ class NotificationScreen extends GetWidget<NotificationController> {
     );
   }
 
-  _body()=>ListView.builder(
-    itemCount: controller.notifications.length,
-    itemBuilder: (context, index) {
-      var notification = controller.notifications[index];
-      return Column(
-        children: [
-          ListTile(
-            leading: Icon(Icons.location_on,size: 30,),
-            title: Text(notification.title??'',style: TextStyle(color: theme.primaryColor,fontWeight: FontWeight.bold),),
-            subtitle: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(notification.message??'',),
-                Row(
-                  children: [
-                    Text(DateFormat.yMMMd().format(notification.dateTime!),style: TextStyle(color:Colors.grey,fontSize: 12),),
-                    SizedBox(width: 5.0,),
-                    Text(DateFormat.Hm().format(notification.dateTime!),style: TextStyle(color:Colors.grey,fontSize: 12),),
-                  ],
-                )
-              ],
-            ),
+  _body()=>RefreshIndicator(
+    onRefresh: () async{
+      controller.getNotifications();
+    },
+    child: ListView.builder(
+      itemCount: controller.notifications.length,
+      itemBuilder: (context, index) {
+        var notification = controller.notifications[index];
+        return Column(
+          children: [
+            ListTile(
+              leading: Icon(Icons.location_on,size: 30,),
+              title: Text(notification.title??'',style: TextStyle(color: theme.primaryColor,fontWeight: FontWeight.bold),),
+              subtitle: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(notification.message??'',),
+                  Row(
+                    children: [
+                      Text(DateFormat.yMMMd().format(notification.dateTime!),style: TextStyle(color:Colors.grey,fontSize: 12),),
+                      SizedBox(width: 5.0,),
+                      Text(DateFormat.Hm().format(notification.dateTime!),style: TextStyle(color:Colors.grey,fontSize: 12),),
+                    ],
+                  )
+                ],
+              ),
 
-          ),
-          Divider(color: Colors.grey,endIndent: 20,indent: 20,)
-        ],
-      );
-    },);
+            ),
+            Divider(color: Colors.grey,endIndent: 20,indent: 20,)
+          ],
+        );
+      },),
+  );
 }

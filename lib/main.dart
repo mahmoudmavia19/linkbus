@@ -3,7 +3,6 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:linkbus/data/apiClient/api_client.dart';
 import 'core/app_export.dart';
 import 'firebase_options.dart';
 
@@ -44,18 +43,7 @@ class _MyAppState extends State<MyApp> {
     messaging.getToken().then((value) {
       print(value);
     });
-    messaging.subscribeToTopic('fcm_test');
-    FirebaseMessaging.onMessage.listen((RemoteMessage event) {
-      print("message received");
-      print(event.notification!.body);
-      Get.dialog(AlertDialog(
-        title:Text('Notification'),
-          content:
-      Text(event.notification!.body!)));
-    });
-    FirebaseMessaging.onMessageOpenedApp.listen((message) {
-      print('Message clicked!');
-    });
+
   }
 
   @override
@@ -66,7 +54,7 @@ class _MyAppState extends State<MyApp> {
         debugShowCheckedModeBanner: false,
         theme: theme,
         translations: AppLocalization(),
-        locale: Get.deviceLocale,
+        locale: Locale('en', 'US'),
         fallbackLocale: Locale('en', 'US'),
         title: 'LINKBUS',
         initialBinding: InitialBindings(),

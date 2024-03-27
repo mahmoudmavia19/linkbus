@@ -5,6 +5,7 @@ import 'package:linkbus/data/apiClient/api_driver_client.dart';
 import '../../core/errors/error_handler.dart';
 import '../../core/errors/failure.dart';
 import '../../core/network/network_info.dart';
+import '../models/driver.dart';
 import '../models/notification.dart';
 import '../models/passenger.dart';
 import '../models/trip.dart';
@@ -15,6 +16,7 @@ abstract class PassengerRemoteDataSource {
   Future<Either<Failure,void>> shareMyLocation(Passenger passenger);
   Future<Either<Failure,void>> updateTrip(Trip trip);
   Stream<Either<Failure, List<Notification>>> getNotifications();
+  Stream<Either<Failure, Driver>> getDriverStream(String driverId);
   Future<Either<Failure,Passenger>> getPassenger();
   Future<Either<Failure,List<Trip>>> getTrips();
 
@@ -132,5 +134,21 @@ class PassengerRemoteDataSourceImpl implements PassengerRemoteDataSource {
     }
   }
 
+  @override
+  Stream<Either<Failure, Driver>> getDriverStream(String driverId) async* {
+    if (await networkInfo.isConnected()) {
+      try {
+        await for (var result in apiClient.getDriverStream(driverId)) {
+          yield Right(result);
+        }
+      } catch (e) {
+        yield Left(ErrorHandler
+            .handle(e)
+            .failure);
+      }
+    } else {
+      yield Left(DataSource.NO_INTERNET_CONNECTION.getFailure());
+    }
+  }
 
 }

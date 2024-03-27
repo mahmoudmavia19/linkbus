@@ -1,8 +1,11 @@
 import 'dart:ui';
 
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:linkbus/data/models/notification.dart';
 
 import '../../presentation/student/help_screen/model/model.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 LatLng startMapLocation =  LatLng(24.774265, 46.738586);
 class HelpData {
@@ -58,3 +61,42 @@ List<Color> appColorsDigress = [
   Color(0xFFECBD13),
   Color(0xFFE3AE06),
   ];
+
+
+Future<void> sendNotificationMFC(String topic,Notification noti) async {
+  // Your server key from Firebase Console
+  String serverKey = 'AAAAwneGzTg:APA91bE7-1c-XyGt6u8qWXmp2FYyfCGv4N9gOhr8aPWy4CeUVMVF4RBfwhzoiZy0rwIHGq9fuZY5sjHSvujVwCHVB0mhHbAaJHmR0JUxKaIsIVWF0xqzlx56Y5zJ6qAEfmdMe4-gfVa6';
+
+  // FCM endpoint
+  String fcmUrl = 'https://fcm.googleapis.com/fcm/send';
+
+
+
+  // Notification payload
+  Map<String, dynamic> notification = {
+    'to': '/topics/$topic',
+    'notification': {
+      'title': 'Linked Bus',
+      'body': noti.message,
+      'click_action': 'FLUTTER_NOTIFICATION_CLICK' // Optional: Handle click action in Flutter
+    }
+  };
+
+  // Construct headers with authentication
+  Map<String, String> headers = {
+    'Authorization': 'key=$serverKey',
+    'Content-Type': 'application/json'
+  };
+
+  // Send the notification
+  try {
+    http.Response response =
+    await http.post(Uri.parse(fcmUrl), headers: headers, body: jsonEncode(notification));
+
+    // Print the response
+    print('Response status: ${response.statusCode}');
+    print('Response body: ${response.body}');
+  } catch (e) {
+    print('Error sending notification: $e');
+  }
+}

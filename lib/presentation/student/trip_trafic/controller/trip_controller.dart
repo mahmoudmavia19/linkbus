@@ -1,24 +1,25 @@
 import 'dart:async';
 import 'dart:math';
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:linkbus/data/remote_date_source/passenger_remote_data_source.dart';
 import 'package:location/location.dart';
 import '../../../../core/app_export.dart';
 import '../../../../core/constants/constant.dart';
+import '../../../../data/models/driver.dart';
+import '../../../../data/models/trip.dart';
 
 class TripTraficController extends GetxController {
   RxString timer = "".obs;
   RxString newDistance = "".obs;
   final Rx<LocationData> currentLocation_ = Rx(LocationData.fromMap({}));
   late GoogleMapController mapController ;
+PassengerRemoteDataSource passengerRemoteDataSource = Get.find<PassengerRemoteDataSourceImpl>() ;
+  Rx<Trip?> trip = Rx<Trip?>(null);
+  Rx<Driver?> driver = Rx<Driver?>(null);
 
-  final Rx<LocationData> startLocation = Rx(LocationData.fromMap({
-    'latitude': startMapLocation.latitude,
-    'longitude': startMapLocation.longitude,
-  }));
-  final Rx<LocationData> endLocation = Rx(LocationData.fromMap({
-    'latitude': startMapLocation.latitude + 0.005,
-    'longitude': startMapLocation.longitude + 0.005,
-  }));
+  final Rx<LocationData?> startLocation = Rx<LocationData?>(null);
+  final Rx<LocationData?> endLocation = Rx<LocationData?>(null);
   List<LatLng> polylineCoordinates = [];
 
   reTest(){
@@ -34,14 +35,22 @@ class TripTraficController extends GetxController {
     super.onClose();
   }
   @override
-  void onInit() {
-    getPolyPoints();
+  void onInit() async{
 /*
     _timerTest();
 */
      super.onInit();
   }
 
+  Future<void>startDriverTracking() async{
+   (await passengerRemoteDataSource.getDriverStream(trip.value!.driver!)).listen((event) {
+      event.fold((l){}, (r) {
+         driver.value = r;
+         print(r.uid);
+         updateLocations();
+      });
+   });
+  }
 
   void startUpdatingLocations() {
     startLocation.value = LocationData.fromMap({
@@ -50,8 +59,7 @@ class TripTraficController extends GetxController {
     });
     Get.snackbar('Trip Alert', 'Trip started');
     Timer.periodic(Duration(milliseconds: 500), (Timer timer) {
-      updateLocations(timer);
-      print(startLocation.value);
+       print(startLocation.value);
       print('start');
 
     });
@@ -82,40 +90,47 @@ class TripTraficController extends GetxController {
   }
 
 
-  void updateLocations(Timer timer) {
+  void updateLocations() {
     // Update start location coordinates (move towards end location)
-    if (startLocation.value.latitude! < endLocation.value.latitude!) {
-      startLocation.value = LocationData.fromMap({
-        'latitude': startLocation.value.latitude! + 0.0001,
-        'longitude': startLocation.value.longitude! + 0.0001,
-      });
+    if (driver.value!.currentLocation!.latitude  < endLocation.value!.latitude!) {
+
      // print(calculateDistance(LatLng(startLocation.value.latitude!, startLocation.value.longitude!), LatLng(endLocation.value.latitude!, endLocation.value.longitude!)));
-      if(calculateDistance(LatLng(startLocation.value.latitude!, startLocation.value.longitude!), LatLng(endLocation.value.latitude!, endLocation.value.longitude!)) == 105.13223958075635){
+      if(calculateDistance(LatLng(driver.value!.currentLocation!.latitude, driver.value!.currentLocation!.longitude!), LatLng(endLocation.value!.latitude!, endLocation.value!.longitude!)) == 20){
         Get. snackbar('Trip Alert', 'The driver is close to your home');
       }
-      calculateTravelTime(LatLng(startLocation.value.latitude!, startLocation.value.longitude!), LatLng(endLocation.value.latitude!, endLocation.value.longitude!));
-    }   else {
+      calculateTravelTime(LatLng(driver.value!.currentLocation!.latitude, driver.value!.currentLocation!.longitude!), LatLng(endLocation.value!.latitude!, endLocation.value!.longitude!));
+    }/*   else if(  ){
       // Stop the timer when the end point is reached
       Get. snackbar('Trip Alert', 'Trip ended');
       newDistance.value = "0";
       this.timer.value = "0h 0m 0s";
-      timer.cancel();
-    }
+     }*/
 
     mapController.animateCamera(
       CameraUpdate.newCameraPosition(
         CameraPosition(
           zoom: 16,
-          target: LatLng(startLocation.value.latitude!, startLocation.value.longitude!),
+          target: LatLng(driver.value!.currentLocation!.latitude!, driver.value!.currentLocation!.longitude!),
         ),
       ),
     );
     update();
   }
 
-  void getPolyPoints() {
-    polylineCoordinates.add(LatLng(startLocation.value.latitude!, startLocation.value.longitude!));
-    polylineCoordinates.add(LatLng(endLocation.value.latitude!, endLocation.value.longitude!));
+  Future<void> getPolyPoints() async{
+    PolylinePoints polylinePoints = PolylinePoints();
+    PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
+      'AIzaSyDq7QPfERggjxVUMwB7khSou_0Ux7ujYVM', // Your Google Map Key
+      PointLatLng(startLocation.value!.latitude!, startLocation.value!.longitude!),
+      PointLatLng(endLocation.value!.latitude!, endLocation.value!.longitude!),
+    );
+    result.points.forEach(
+          (PointLatLng point) => polylineCoordinates.add(
+        LatLng(point.latitude, point.longitude),
+      ),
+    );
+    /*polylineCoordinates.add(LatLng(startLocation.value.latitude!, startLocation.value.longitude!));
+    polylineCoordinates.add(LatLng(endLocation.value.latitude!, endLocation.value.longitude!));*/
   }
 
 

@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:linkbus/presentation/student/trip_trafic/controller/trip_controller.dart';
-
 import '../../../core/app_export.dart';
-import '../../../core/constants/constant.dart';
 import '../../../core/utils/app_strings.dart';
 
 class TripTraficScreen extends GetWidget<TripTraficController> {
@@ -37,29 +35,41 @@ class TripTraficScreen extends GetWidget<TripTraficController> {
                 ),
               ],
             ),
-            trailing: TextButton(onPressed: (){
+            /*trailing: TextButton(onPressed: (){
               controller.reTest();
-            }, child: Text('Re-Test')),
+            }, child: Text('Re-Test')),*/
           ),
           Expanded(
             child: Container(
                 height: 200,
                 child: Obx(
-                      () => GoogleMap(
+                      () =>controller.trip.value==null && controller.trip.value?.started!=true?
+                      Center(
+                        child: Card(
+                          child: Padding(
+                            padding: const EdgeInsets.all(20.0),
+                            child: Text('No Trip Found',style: TextStyle(fontSize: 20.0),),
+                          ),
+                        ) ,
+                      )
+                          :  GoogleMap(
                     mapType: MapType.terrain,
                     myLocationEnabled: true,
                     circles: {
                       Circle(
                         circleId: const CircleId("start"),
                         center: LatLng(
-                          startMapLocation.latitude,
-                          startMapLocation.longitude,
+                          controller.trip.value!.startLocation!.latitude,
+                          controller.trip.value!.startLocation!.longitude,
                         ),
                         radius: 2,
                       )
                     },
                     initialCameraPosition: CameraPosition(
-                      target: LatLng(startMapLocation.latitude, startMapLocation.longitude),
+                      target: LatLng(
+                        controller.trip.value!.startLocation!.latitude,
+                        controller.trip.value!.startLocation!.longitude,
+                      ),
                       zoom: 19,
                     ),
                     onMapCreated: (_controller) {
@@ -79,17 +89,23 @@ class TripTraficScreen extends GetWidget<TripTraficController> {
                     markers: {
                       Marker(
                         markerId: MarkerId('Start Location'),
-                        position: LatLng(controller.startLocation.value.latitude ?? startMapLocation.latitude,
-                            controller.startLocation.value.longitude ?? startMapLocation.longitude),
+                        position: LatLng(controller.startLocation.value!.latitude!,
+                            controller.startLocation.value!.longitude!),
                         infoWindow: InfoWindow(title: 'Start Location'),
                       ),
                       Marker(
                         markerId: MarkerId('End Location'),
                         icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueAzure),
-                        position: LatLng(controller.endLocation.value.latitude ?? startMapLocation.latitude,
-                            controller.endLocation.value.longitude ?? startMapLocation.longitude),
+                        position: LatLng(controller.endLocation.value!.latitude!,
+                            controller.endLocation.value!.longitude!),
                         infoWindow: InfoWindow(title: 'End Location'),
                       ),
+                      if(controller.driver.value != null)
+                      Marker(markerId: MarkerId(controller.driver.value!.uid!),
+                        position: controller.driver.value!.currentLocation!,
+                        infoWindow: InfoWindow(title: controller.driver.value!.name),
+                        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow),
+                      )
                     },
                   ),
                 ),

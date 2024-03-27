@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:linkbus/core/constants/constant.dart';
 import 'package:linkbus/core/utils/app_strings.dart';
+import 'package:linkbus/core/utils/state_renderer/state_renderer_impl.dart';
 
 import '../../../core/app_export.dart';
 import 'controller/my_location_controller.dart';
@@ -17,7 +18,7 @@ class DriverLocationManagementScreen extends GetWidget<DriverMyLocationControlle
                fontWeight: FontWeight.bold
              ),),
              trailing: TextButton(onPressed: () {
-               
+               controller.saveMyLocation();
              }, style: TextButton.styleFrom(
                    backgroundColor: theme.primaryColor,
                     foregroundColor: Colors.white
@@ -34,37 +35,7 @@ class DriverLocationManagementScreen extends GetWidget<DriverMyLocationControlle
           ),
           Expanded(
             child: Obx(() {
-              return Container(
-                height: 200,
-                child: GoogleMap(
-                  mapType: MapType.terrain,
-                  myLocationEnabled:true ,
-                  initialCameraPosition: CameraPosition(
-                    target: LatLng(
-                      controller.currentLocation_.value.latitude ?? startMapLocation.latitude,
-                      controller.currentLocation_.value.longitude ?? startMapLocation.longitude,
-                    ),
-                    zoom: 16,
-                  ),
-                  onMapCreated: (_controller) {
-                    controller.mapController = _controller ;                    // Do other initialization as needed
-                  },
-                  onTap: (argument) {
-                    print(argument);
-                    controller.chooseLocation(argument);
-                  },
-                  markers: {
-                    Marker(
-                      markerId: MarkerId('currentLocation'),
-                      position: LatLng(
-                        controller.currentLocation_.value.latitude ??  startMapLocation.latitude,
-                        controller.currentLocation_.value.longitude ??  startMapLocation.longitude,
-                      ),
-                      infoWindow: InfoWindow(title: 'Current Location'),
-                    ),
-                  },
-                ),
-              );
+              return controller.state.value.getScreenWidget(_body(), (){});
             }),
           ),
         ],
@@ -86,4 +57,36 @@ class DriverLocationManagementScreen extends GetWidget<DriverMyLocationControlle
 
     );
   }
+
+  _body()=>Container(
+    height: 200,
+    child: GoogleMap(
+      mapType: MapType.terrain,
+      myLocationEnabled:true ,
+      initialCameraPosition: CameraPosition(
+        target: LatLng(
+          controller.currentLocation_.value.latitude ?? startMapLocation.latitude,
+          controller.currentLocation_.value.longitude ?? startMapLocation.longitude,
+        ),
+        zoom: 16,
+      ),
+      onMapCreated: (_controller) {
+        controller.mapController = _controller ;                    // Do other initialization as needed
+      },
+      onTap: (argument) {
+        print(argument);
+        controller.chooseLocation(argument);
+      },
+      markers: {
+        Marker(
+          markerId: MarkerId('currentLocation'),
+          position: LatLng(
+            controller.currentLocation_.value.latitude ??  startMapLocation.latitude,
+            controller.currentLocation_.value.longitude ??  startMapLocation.longitude,
+          ),
+          infoWindow: InfoWindow(title: 'Current Location'),
+        ),
+      },
+    ),
+  ) ;
 }
