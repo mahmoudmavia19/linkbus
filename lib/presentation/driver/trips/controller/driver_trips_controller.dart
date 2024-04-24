@@ -1,5 +1,4 @@
 import 'package:flutter/animation.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:linkbus/core/app_export.dart';
 import 'package:linkbus/core/utils/state_renderer/state_renderer_impl.dart';
 import 'package:linkbus/data/models/driver.dart';
@@ -7,7 +6,6 @@ import 'package:linkbus/data/models/trip.dart';
 import 'package:linkbus/data/remote_date_source/remote_data_source.dart';
 import 'package:linkbus/presentation/driver/main/controller/main_controller.dart';
 import 'package:location/location.dart';
-
 import '../../../../core/utils/state_renderer/state_renderer.dart';
 import '../../../../data/models/notification.dart';
 import '../../trip_trafic/controller/trip_controller.dart';
@@ -44,9 +42,10 @@ class DriverTripsController extends GetxController {
         }
       });
     }
-    startTripVoid(Trip trip){
+    startTripVoid(Trip trip) async{
+      state.value = LoadingState(stateRendererType: StateRendererType.fullScreenEmptyState);
       this.trip.value = trip;
-      updateTripIsStarted(true);
+    await  updateTripIsStarted(true);
       sendNotification(trip, Notification(dateTime: DateTime.now(), message: 'Trip , ${trip.title}  started'));
       driverTripTraficController.startLocation.value =LocationData.fromMap({
         'latitude': trip.startLocation!.latitude,
@@ -56,11 +55,13 @@ class DriverTripsController extends GetxController {
         'latitude': trip.endLocation!.latitude,
         'longitude': trip.endLocation!.longitude,
       }) ;
-      driverTripTraficController.getPassengerForTrip(trip.uid);
-      driverTripTraficController.getPolyPoints();
+     await driverTripTraficController.getPassengerForTrip(trip.uid);
+      //await   driverTripTraficController.getPolyPoints();
       driverTripTraficController.isTripStarted.value = true;
-      driverTripTraficController.getCurrentLocation();
+         driverTripTraficController.getCurrentLocation();
+      state.value = ContentState();
       driverMainController.pageController.animateToPage(1, duration: Duration(seconds: 1), curve: Curves.bounceIn);
+
     }
 
     Future<void> getDriver()async{

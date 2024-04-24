@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:ffi';
 import 'dart:math';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -7,7 +6,6 @@ import 'package:linkbus/core/utils/state_renderer/state_renderer.dart';
 import 'package:linkbus/core/utils/state_renderer/state_renderer_impl.dart';
 import 'package:linkbus/data/models/passenger.dart';
 import 'package:linkbus/data/remote_date_source/remote_data_source.dart';
-import 'package:linkbus/presentation/driver/trips/controller/driver_trips_controller.dart';
 import 'package:location/location.dart';
 import '../../../../core/app_export.dart';
 import '../../../../core/constants/constant.dart';
@@ -22,6 +20,7 @@ class DriverTripTraficController extends GetxController {
     final  Rx<LocationData?> startLocation = Rx<LocationData?>(null);
     final Rx<LocationData?> endLocation = Rx<LocationData?>(null);
   List<LatLng> polylineCoordinates = [];
+  RxList<Polyline> polyLines = <Polyline>[].obs;
 
   DriverRemoteDataSource driverRemoteDataSource = Get.find<DriverRemoteDataSourceImpl>();
 
@@ -51,7 +50,7 @@ class DriverTripTraficController extends GetxController {
               newDistance.value = "0";
               this.timer.value = "0h 0m 0s";
             }
-
+/*
             mapController.animateCamera(
               CameraUpdate.newCameraPosition(
                 CameraPosition(
@@ -59,18 +58,13 @@ class DriverTripTraficController extends GetxController {
                   target: LatLng( currentLocation_.value.latitude!,  currentLocation_.value.longitude!),
                 ),
               ),
-            );
+            );*/
 
 
           },
     );
   }
-  reTest(){
-/*
-    _timerTest();
-*/
-    startUpdatingLocations();
-  }
+
   shareLocation(LatLng location)async{
     (await driverRemoteDataSource.shareMyLocation(location)).fold((l) {
 
@@ -105,8 +99,29 @@ class DriverTripTraficController extends GetxController {
         StateRendererType.popupErrorState,
         l.message
       );
-    }, (r) {
+    }, (r) async{
       passengers.value = r;
+      Passenger? lastPassenger ;
+      for(var passenger in passengers){
+        // get random string ;
+        var rSr  = Random().nextInt(1000).toString();
+        if(passenger.uid == passengers.first.uid){
+          var result = await getPolyLine(PointLatLng(startLocation.value!.latitude!,startLocation.value!.longitude!), PointLatLng(passenger.location!.latitude, passenger.location!.longitude),rSr) ;
+          polyLines.add(result);
+
+        }
+        else {
+          if(lastPassenger != null){
+            var result = await getPolyLine( PointLatLng(lastPassenger.location!.latitude, lastPassenger.location!.longitude), PointLatLng(passenger.location!.latitude, passenger.location!.longitude),rSr) ;
+            polyLines.add(result);
+          }
+        }
+        lastPassenger = passenger;
+      }
+      var result = await getPolyLine( PointLatLng(lastPassenger!.location!.latitude, lastPassenger.location!.longitude),PointLatLng(endLocation.value!.latitude!,endLocation.value!.longitude!),'end') ;
+      polyLines.add(result);
+      print('----------${polyLines.length}----------------------');
+      print('----------${passengers.length}----------------------');
       state.value = ContentState();
     });
   }
@@ -171,14 +186,14 @@ class DriverTripTraficController extends GetxController {
       timer.cancel();
     }
 
-    mapController.animateCamera(
+   /* mapController.animateCamera(
       CameraUpdate.newCameraPosition(
         CameraPosition(
           zoom: 16,
           target: LatLng(startLocation.value!.latitude!, startLocation.value!.longitude!),
         ),
       ),
-    );
+    );*/
     update();
   }
   void updateLocationsPlus() {
@@ -200,30 +215,43 @@ class DriverTripTraficController extends GetxController {
       this.timer.value = "0h 0m 0s";
     }
 
-    mapController.animateCamera(
+ /*   mapController.animateCamera(
       CameraUpdate.newCameraPosition(
         CameraPosition(
           zoom: 16,
           target: LatLng(startLocation.value!.latitude!, startLocation.value!.longitude!),
         ),
       ),
-    );
+    );*/
     update();
   }
   Future<void> getPolyPoints() async{
     PolylinePoints polylinePoints = PolylinePoints();
-    PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
+       PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
       'AIzaSyDq7QPfERggjxVUMwB7khSou_0Ux7ujYVM', // Your Google Map Key
       PointLatLng(startLocation.value!.latitude!, startLocation.value!.longitude!),
       PointLatLng(endLocation.value!.latitude!, endLocation.value!.longitude!),
+      optimizeWaypoints: true,
     );
-    result.points.forEach(
+
+     result.points.forEach(
           (PointLatLng point) => polylineCoordinates.add(
         LatLng(point.latitude, point.longitude),
       ),
     );
-    /*polylineCoordinates.add(LatLng(startLocation.value.latitude!, startLocation.value.longitude!));
-    polylineCoordinates.add(LatLng(endLocation.value.latitude!, endLocation.value.longitude!));*/
+  }
+
+
+
+  Future<Polyline> getPolyLine(PointLatLng start,PointLatLng end ,String id) async{
+    PolylinePoints polylinePoints = PolylinePoints();
+    PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
+      'AIzaSyDq7QPfERggjxVUMwB7khSou_0Ux7ujYVM', // Your Google Map Key
+      start,
+       end,
+      optimizeWaypoints: true,
+    );
+   return Polyline(polylineId: PolylineId(id), points: result.points.map((e) => LatLng(e.latitude, e.longitude)).toList(), color: theme.primaryColor, width: 6);
   }
 
 

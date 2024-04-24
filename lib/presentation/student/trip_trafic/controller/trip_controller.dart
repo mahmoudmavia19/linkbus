@@ -2,11 +2,13 @@ import 'dart:async';
 import 'dart:math';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:linkbus/data/models/notification.dart';
 import 'package:linkbus/data/remote_date_source/passenger_remote_data_source.dart';
 import 'package:location/location.dart';
 import '../../../../core/app_export.dart';
 import '../../../../core/constants/constant.dart';
 import '../../../../data/models/driver.dart';
+import '../../../../data/models/passenger.dart';
 import '../../../../data/models/trip.dart';
 
 class TripTraficController extends GetxController {
@@ -21,6 +23,7 @@ PassengerRemoteDataSource passengerRemoteDataSource = Get.find<PassengerRemoteDa
   final Rx<LocationData?> startLocation = Rx<LocationData?>(null);
   final Rx<LocationData?> endLocation = Rx<LocationData?>(null);
   List<LatLng> polylineCoordinates = [];
+  RxList<Polyline> polyLines = <Polyline>[].obs;
 
   reTest(){
 /*
@@ -42,12 +45,12 @@ PassengerRemoteDataSource passengerRemoteDataSource = Get.find<PassengerRemoteDa
      super.onInit();
   }
 
-  Future<void>startDriverTracking() async{
+  Future<void>startDriverTracking(Passenger passenger) async{
    (await passengerRemoteDataSource.getDriverStream(trip.value!.driver!)).listen((event) {
       event.fold((l){}, (r) {
          driver.value = r;
          print(r.uid);
-         updateLocations();
+         updateLocations(passenger);
       });
    });
   }
@@ -90,13 +93,14 @@ PassengerRemoteDataSource passengerRemoteDataSource = Get.find<PassengerRemoteDa
   }
 
 
-  void updateLocations() {
+  void updateLocations(Passenger passenger) {
     // Update start location coordinates (move towards end location)
     if (driver.value!.currentLocation!.latitude  < endLocation.value!.latitude!) {
 
      // print(calculateDistance(LatLng(startLocation.value.latitude!, startLocation.value.longitude!), LatLng(endLocation.value.latitude!, endLocation.value.longitude!)));
       if(calculateDistance(LatLng(driver.value!.currentLocation!.latitude, driver.value!.currentLocation!.longitude!), LatLng(endLocation.value!.latitude!, endLocation.value!.longitude!)) == 20){
-        Get. snackbar('Trip Alert', 'The driver is close to your home');
+        Get.snackbar('Trip Alert', 'The driver is close to your home');
+        sendNotificationMFC(passenger.uid!, Notification(dateTime: DateTime.now(), message: 'The driver is close to your home'));
       }
       calculateTravelTime(LatLng(driver.value!.currentLocation!.latitude, driver.value!.currentLocation!.longitude!), LatLng(endLocation.value!.latitude!, endLocation.value!.longitude!));
     }/*   else if(  ){
@@ -117,6 +121,14 @@ PassengerRemoteDataSource passengerRemoteDataSource = Get.find<PassengerRemoteDa
     update();
   }
 
+  Future<void> getPolyLinesForPassenger(Passenger passenger)async{
+    polyLines.add(await getPolyLine(PointLatLng(startLocation.value!.latitude!, startLocation.value!.longitude!),
+        PointLatLng(passenger.location!.latitude, passenger.location!.longitude), '0'));
+    polyLines.add(await getPolyLine(PointLatLng(passenger.location!.latitude, passenger.location!.longitude),
+        PointLatLng(endLocation.value!.latitude!, endLocation.value!.longitude!), '1'));
+
+  }
+
   Future<void> getPolyPoints() async{
     PolylinePoints polylinePoints = PolylinePoints();
     PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
@@ -132,6 +144,19 @@ PassengerRemoteDataSource passengerRemoteDataSource = Get.find<PassengerRemoteDa
     /*polylineCoordinates.add(LatLng(startLocation.value.latitude!, startLocation.value.longitude!));
     polylineCoordinates.add(LatLng(endLocation.value.latitude!, endLocation.value.longitude!));*/
   }
+
+
+  Future<Polyline> getPolyLine(PointLatLng start,PointLatLng end ,String id) async{
+    PolylinePoints polylinePoints = PolylinePoints();
+    PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
+      'AIzaSyDq7QPfERggjxVUMwB7khSou_0Ux7ujYVM', // Your Google Map Key
+      start,
+      end,
+      optimizeWaypoints: true,
+    );
+    return Polyline(polylineId: PolylineId(id), points: result.points.map((e) => LatLng(e.latitude, e.longitude)).toList(), color: theme.primaryColor, width: 6);
+  }
+
 
 
   // Assuming an average speed of 60 kilometers per hour

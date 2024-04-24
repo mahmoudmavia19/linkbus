@@ -37,6 +37,7 @@ class ApiClient extends GetConnect {
         .collection('passengers')
         .doc(auth.currentUser!.uid)
         .collection('notifications')
+    .orderBy('dateTime', descending: true)
         .snapshots()
         .map((querySnapshot) => querySnapshot.docs
         .map((doc) => Notification.fromJson(doc.data()))

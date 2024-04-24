@@ -41,6 +41,7 @@ class HomeController extends GetxController {
       state.value = ErrorState(StateRendererType.fullScreenErrorState, failure.message);
     }, (result) async{
       passenger = result;
+      FirebaseMessaging.instance.subscribeToTopic(passenger!.uid!);
       await getTrips();
      });
   }
@@ -84,8 +85,10 @@ class HomeController extends GetxController {
             'latitude': element.endLocation!.latitude,
             'longitude': element.endLocation!.longitude,
           });
-          await Get.find<TripTraficController>().getPolyPoints();
-          await Get.find<TripTraficController>().startDriverTracking();
+
+          await Get.find<TripTraficController>().getPolyLinesForPassenger(passenger!);
+     //     await Get.find<TripTraficController>().getPolyPoints();
+          await Get.find<TripTraficController>().startDriverTracking(passenger!);
 
         }
       });

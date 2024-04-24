@@ -71,9 +71,13 @@ class HomeScreen extends GetWidget<HomeController> {
                       height: 30.0,
                       child: Switch(value: trip.selected,
                         onChanged: (value) {
+                        if(!trip.started) {
                           trip.selected = value;
                           controller.updateTrip(trip);
                           print(value);
+                        }else {
+                          Get.snackbar(AppStrings.tripAlreadyStarted, AppStrings.tripAlreadyStarted, duration: Duration(seconds: 2),);
+                        }
                         },),
                     )
                   ],

@@ -11,10 +11,11 @@ class MainScreen extends GetWidget<MainController>{
   Widget build(BuildContext context) {
     return  Scaffold(
       appBar: AppBar(
-        title: Text('Hi ${homeController.passenger?.name??''}'),
+        title: Text('Hi'),
         leading:IconButton(onPressed: () {
           Get.toNamed(AppRoutes.studentHelpScreen);
-        }, icon: Image.asset(ImageConstant.service),),
+        },
+          icon: Image.asset(ImageConstant.service),),
         actions: [
           Image.asset(ImageConstant.imgLogo,width:100,fit: BoxFit.cover,),
         ],

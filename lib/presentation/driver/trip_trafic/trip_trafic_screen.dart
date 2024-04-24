@@ -181,14 +181,14 @@ class DriverTripTraficScreen extends GetWidget<DriverTripTraficController> {
                       onMapCreated: (_controller) {
                         controller.mapController = _controller;
                       },
-                      polylines: {
+                      polylines: /*{
                         Polyline(
                           polylineId: const PolylineId("route"),
                           points: controller.polylineCoordinates,
                           color: theme.primaryColor,
                           width: 6,
                         ),
-                      },
+                      }*/controller.polyLines.toSet(),
                       onTap: (argument) {
                         print(argument);
                       },
@@ -196,10 +196,24 @@ class DriverTripTraficScreen extends GetWidget<DriverTripTraficController> {
                         for(var item in controller.passengers)
                           if(item.location!=null)
                         Marker(
-                          markerId: MarkerId(item.uid ?? ''),
+                          markerId: MarkerId(item.uid ?? '0'),
                           position: LatLng(item.location!.latitude ,
-                              item.location!.latitude),
+                              item.location!.longitude),
+                          icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow),
                           infoWindow: InfoWindow(title: item.name ?? ''),
+                        ),
+                        Marker(
+                          markerId: MarkerId(driverTripsController.trip.value!.startLocation.toString()),
+                          position: LatLng(driverTripsController.trip.value!.startLocation!.latitude ,
+                              driverTripsController.trip.value!.startLocation!.longitude),
+                          infoWindow: InfoWindow(title:'Start Location'),
+                        ),
+                        Marker(
+                          markerId: MarkerId(driverTripsController.trip.value!.endLocation.toString()),
+                          position: LatLng(driverTripsController.trip.value!.endLocation!.latitude ,
+                              driverTripsController.trip.value!.endLocation!.longitude)
+                          ,
+                          infoWindow: InfoWindow(title:'End Location'),
                         ),
                       },
                     ),

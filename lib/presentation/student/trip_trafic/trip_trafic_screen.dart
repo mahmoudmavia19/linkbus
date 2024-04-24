@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:linkbus/presentation/student/home_screen/controller/home_controller.dart';
 import 'package:linkbus/presentation/student/trip_trafic/controller/trip_controller.dart';
 import '../../../core/app_export.dart';
 import '../../../core/utils/app_strings.dart';
@@ -75,14 +76,14 @@ class TripTraficScreen extends GetWidget<TripTraficController> {
                     onMapCreated: (_controller) {
                       controller.mapController = _controller;
                     },
-                    polylines: {
+                    polylines:/* {
                       Polyline(
                         polylineId: const PolylineId("route"),
                         points: controller.polylineCoordinates,
                         color: theme.primaryColor,
                         width: 6,
                       ),
-                    },
+                    }*/controller.polyLines.toSet(),
                     onTap: (argument) {
                       print(argument);
                     },
@@ -105,7 +106,13 @@ class TripTraficScreen extends GetWidget<TripTraficController> {
                         position: controller.driver.value!.currentLocation!,
                         infoWindow: InfoWindow(title: controller.driver.value!.name),
                         icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow),
-                      )
+                      ),
+                      if(Get.find<HomeController>().passenger?.location != null)
+                        Marker(markerId: MarkerId(Get.find<HomeController>().passenger!.uid!),
+                          position: Get.find<HomeController>().passenger!.location!,
+                          infoWindow: InfoWindow(title: Get.find<HomeController>().passenger!.name),
+                          icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
+                        )
                     },
                   ),
                 ),
