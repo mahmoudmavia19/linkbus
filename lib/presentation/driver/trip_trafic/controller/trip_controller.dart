@@ -85,10 +85,6 @@ class DriverTripTraficController extends GetxController {
   }
   @override
   void onInit() {
-
-/*
-    _timerTest();
-*/
      super.onInit();
   }
   RxList<Passenger> passengers = <Passenger>[].obs;

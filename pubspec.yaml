@@ -16,7 +16,7 @@ dependencies:
   google_maps_flutter: ^2.5.3
   location: ^5.0.3
   geocoding: ^2.1.1
-  concentric_transition: ^1.0.3
+  #concentric_transition: ^1.0.3
   firebase_core: ^2.24.2
   firebase_auth: ^4.16.0
   firebase_database: ^10.4.0
@@ -26,6 +26,7 @@ dependencies:
   flutter_local_notifications: ^17.0.0
   awesome_notifications: ^0.9.3+1
   flutter_polyline_points: ^2.0.0
+  intro_screen_onboarding_flutter: ^1.0.0
 
 dev_dependencies:
   flutter_test: 
