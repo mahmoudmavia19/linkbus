@@ -61,7 +61,7 @@ class DriverLocationManagementScreen extends GetWidget<DriverMyLocationControlle
   _body()=>Container(
     height: 200,
     child: GoogleMap(
-      mapType: MapType.terrain,
+      mapType: MapType.normal,
       myLocationEnabled:true ,
       initialCameraPosition: CameraPosition(
         target: LatLng(
