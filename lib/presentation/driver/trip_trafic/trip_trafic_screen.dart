@@ -224,11 +224,14 @@ class DriverTripTraficScreen extends GetWidget<DriverTripTraficController> {
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
-      floatingActionButton: FloatingActionButton(onPressed: (){
+      floatingActionButton: Visibility(
+        visible: driverTripsController.trip.value!=null,
+        child: FloatingActionButton(onPressed: (){
 
-        driverTripsController.updateTripIsStarted(false);
-      },child: Text('End Trip'),
-        backgroundColor: Colors.red,
+          driverTripsController.updateTripIsStarted(false);
+        },child: Text('End Trip'),
+          backgroundColor: Colors.red,
+        ),
       ),
     );
   }

@@ -66,9 +66,53 @@ class HomeController extends GetxController {
     }) ;
   }
   getTrips () async{
-     (await remoteDataSource.getTrips()).fold((failure) {
-      state.value = ErrorState(StateRendererType.fullScreenErrorState, failure.message);
-    }, (result) {
+     (remoteDataSource.getTrips()).listen((event) {
+       event.fold((l) {
+         state.value = ErrorState(StateRendererType.fullScreenErrorState, l.message);
+       },  (result) {
+         result.forEach((element)async {
+           element.selected = element.passengers.contains(passenger?.uid);
+           trips.value = result;
+           print('object');
+           if(element.started) {
+             Get.snackbar('Trip', 'Trip started');
+             Get
+                 .find<TripTraficController>()
+                 .trip
+                 .value = element;
+             Get.find<TripTraficController>().startLocation .value =LocationData.fromMap({
+               'latitude': element.startLocation!.latitude,
+               'longitude': element.startLocation!.longitude,
+             });
+             Get.find<TripTraficController>().endLocation.value =LocationData.fromMap({
+               'latitude': element.endLocation!.latitude,
+               'longitude': element.endLocation!.longitude,
+             });
+
+             await Get.find<TripTraficController>().getPolyLinesForPassenger(passenger!);
+             //     await Get.find<TripTraficController>().getPolyPoints();
+             await Get.find<TripTraficController>().startDriverTracking(passenger!);
+
+           }
+           else {
+             Get.snackbar('Trip', 'Trip ended');
+             Get
+                 .find<TripTraficController>()
+                 .trip
+                 .value = null;
+             Get.find<TripTraficController>().startLocation.value =null;
+             Get.find<TripTraficController>().endLocation.value =null;
+             Get.find<TripTraficController>().flagClose=false;
+           }
+         });
+         state.value = ContentState();
+       });
+     });
+  }
+}
+
+/*
+*  (result) {
       result.forEach((element)async {
         element.selected = element.passengers.contains(passenger?.uid);
         trips.value = result;
@@ -93,6 +137,5 @@ class HomeController extends GetxController {
         }
       });
       state.value = ContentState();
-    });
-  }
-}
+    }
+* */

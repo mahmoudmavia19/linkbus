@@ -14,6 +14,7 @@ import '../../../../data/models/trip.dart';
 class TripTraficController extends GetxController {
   RxString timer = "".obs;
   RxString newDistance = "".obs;
+  RxBool startMove = false.obs ;
   final Rx<LocationData> currentLocation_ = Rx(LocationData.fromMap({}));
   late GoogleMapController mapController ;
 PassengerRemoteDataSource passengerRemoteDataSource = Get.find<PassengerRemoteDataSourceImpl>() ;
@@ -50,6 +51,7 @@ PassengerRemoteDataSource passengerRemoteDataSource = Get.find<PassengerRemoteDa
       event.fold((l){}, (r) {
          driver.value = r;
          print(r.uid);
+         if(trip.value!=null)
          updateLocations(passenger);
       });
    });
@@ -92,17 +94,23 @@ PassengerRemoteDataSource passengerRemoteDataSource = Get.find<PassengerRemoteDa
     return degrees * pi / 180;
   }
 
+  bool flagClose = false ;
 
   void updateLocations(Passenger passenger) {
     // Update start location coordinates (move towards end location)
     if (driver.value!.currentLocation!.latitude  < endLocation.value!.latitude!) {
 
+      if(startMove.value){
+        calculateTravelTime(LatLng(driver.value!.currentLocation!.latitude, driver.value!.currentLocation!.longitude),LatLng(endLocation.value!.latitude!, endLocation.value!.longitude!));
+      }else{
      // print(calculateDistance(LatLng(startLocation.value.latitude!, startLocation.value.longitude!), LatLng(endLocation.value.latitude!, endLocation.value.longitude!)));
-      if(calculateDistance(LatLng(driver.value!.currentLocation!.latitude, driver.value!.currentLocation!.longitude!), LatLng(endLocation.value!.latitude!, endLocation.value!.longitude!)) == 20){
+      if(calculateDistance(LatLng(driver.value!.currentLocation!.latitude, driver.value!.currentLocation!.longitude), LatLng(passenger.location!.latitude, passenger.location!.longitude)) <= 20 && !flagClose){
         Get.snackbar('Trip Alert', 'The driver is close to your home');
         sendNotificationMFC(passenger.uid!, Notification(dateTime: DateTime.now(), message: 'The driver is close to your home'));
+        flagClose = true ;
       }
-      calculateTravelTime(LatLng(driver.value!.currentLocation!.latitude, driver.value!.currentLocation!.longitude!), LatLng(endLocation.value!.latitude!, endLocation.value!.longitude!));
+      calculateTravelTime(LatLng(driver.value!.currentLocation!.latitude, driver.value!.currentLocation!.longitude), LatLng(passenger.location!.latitude, passenger.location!.longitude));
+    }
     }/*   else if(  ){
       // Stop the timer when the end point is reached
       Get. snackbar('Trip Alert', 'Trip ended');
@@ -110,14 +118,14 @@ PassengerRemoteDataSource passengerRemoteDataSource = Get.find<PassengerRemoteDa
       this.timer.value = "0h 0m 0s";
      }*/
 
-    mapController.animateCamera(
+ /*   mapController.animateCamera(
       CameraUpdate.newCameraPosition(
         CameraPosition(
           zoom: 16,
           target: LatLng(driver.value!.currentLocation!.latitude!, driver.value!.currentLocation!.longitude!),
         ),
       ),
-    );
+    );*/
     update();
   }
 

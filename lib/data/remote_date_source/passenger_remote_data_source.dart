@@ -18,7 +18,7 @@ abstract class PassengerRemoteDataSource {
   Stream<Either<Failure, List<Notification>>> getNotifications();
   Stream<Either<Failure, Driver>> getDriverStream(String driverId);
   Future<Either<Failure,Passenger>> getPassenger();
-  Future<Either<Failure,List<Trip>>> getTrips();
+  Stream<Either<Failure,List<Trip>>> getTrips();
 
 }
 class PassengerRemoteDataSourceImpl implements PassengerRemoteDataSource {
@@ -105,18 +105,19 @@ class PassengerRemoteDataSourceImpl implements PassengerRemoteDataSource {
   }
 
   @override
-   Future<Either<Failure,List<Trip>>> getTrips() async {
+   Stream<Either<Failure,List<Trip>>> getTrips() async* {
      if (await networkInfo.isConnected()) {
        try {
-         var result = await apiClient.getTrips();
-         return Right(result);
+           await for (var result in apiClient.getTrips()) {
+             yield Right(result);
+           }
        } catch (e) {
-         return Left(ErrorHandler
+         yield Left(ErrorHandler
              .handle(e)
              .failure);
        }
      } else {
-       return Left(DataSource.NO_INTERNET_CONNECTION.getFailure());
+       yield Left(DataSource.NO_INTERNET_CONNECTION.getFailure());
      }
    }
 

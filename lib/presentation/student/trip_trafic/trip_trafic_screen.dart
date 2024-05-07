@@ -104,13 +104,13 @@ class TripTraficScreen extends GetWidget<TripTraficController> {
                       if(controller.driver.value != null)
                       Marker(markerId: MarkerId(controller.driver.value!.uid!),
                         position: controller.driver.value!.currentLocation!,
-                        infoWindow: InfoWindow(title: controller.driver.value!.name),
+                        infoWindow: InfoWindow(title: controller.driver.value?.name??'Driver'),
                         icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow),
                       ),
                       if(Get.find<HomeController>().passenger?.location != null)
                         Marker(markerId: MarkerId(Get.find<HomeController>().passenger!.uid!),
                           position: Get.find<HomeController>().passenger!.location!,
-                          infoWindow: InfoWindow(title: Get.find<HomeController>().passenger!.name),
+                          infoWindow: InfoWindow(title: Get.find<HomeController>().passenger?.name??'My Location'),
                           icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
                         )
                     },
@@ -118,7 +118,23 @@ class TripTraficScreen extends GetWidget<TripTraficController> {
                 ),
               )
           ),
-        ],
+        ]
+      ),
+      floatingActionButton: Obx(
+        ()=> Visibility(
+          visible:  controller.startMove.value == false && controller.flagClose,
+          child: FloatingActionButton(onPressed:(){
+            Get.defaultDialog(title: 'Start Trip',content: Text('Are you sure you want to start trip?'),actions: [
+              TextButton(onPressed: (){
+                controller.startMove.value = true ;
+                Get.back();
+              }, child: Text('Yes')),
+              TextButton(onPressed: (){
+                Get.back();
+              }, child: Text('No')),
+            ]);
+          },child:Icon(Icons.sensor_door_outlined),),
+        ),
       ),
     );
   }

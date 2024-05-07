@@ -57,10 +57,17 @@ class ApiClient extends GetConnect {
     return Passenger.fromJson(result.data()!);
   }
 
-  Future<List<Trip>> getTrips() async {
-    var result = await firestore.collection('trips').get();
-    return result.docs.map((e) => Trip.fromJson(e.data())).toList();
+  Stream<List<Trip>> getTrips()   {
+    return firestore
+        .collection('trips')
+        .orderBy('dateTime', descending: true)
+        .snapshots()
+        .map((querySnapshot) => querySnapshot.docs
+        .map((doc) => Trip.fromJson(doc.data()))
+        .toList());
   }
+
+
 
   // test send trips
 
