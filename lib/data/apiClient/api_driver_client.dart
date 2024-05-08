@@ -67,7 +67,6 @@ class ApiDriverClient extends GetConnect {
     await firestore.collection('trips').doc(trip.uid).update(trip.toJson());
   }
 
-
   Future<Driver> getDriver() async {
     var result = await firestore.collection('drivers').doc(
         auth.currentUser!.uid).get();

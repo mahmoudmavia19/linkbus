@@ -98,7 +98,7 @@ PassengerRemoteDataSource passengerRemoteDataSource = Get.find<PassengerRemoteDa
 
   void updateLocations(Passenger passenger) {
     // Update start location coordinates (move towards end location)
-    if (driver.value!.currentLocation!.latitude  < endLocation.value!.latitude!) {
+
 
       if(startMove.value){
         calculateTravelTime(LatLng(driver.value!.currentLocation!.latitude, driver.value!.currentLocation!.longitude),LatLng(endLocation.value!.latitude!, endLocation.value!.longitude!));
@@ -111,7 +111,7 @@ PassengerRemoteDataSource passengerRemoteDataSource = Get.find<PassengerRemoteDa
       }
       calculateTravelTime(LatLng(driver.value!.currentLocation!.latitude, driver.value!.currentLocation!.longitude), LatLng(passenger.location!.latitude, passenger.location!.longitude));
     }
-    }/*   else if(  ){
+    /*   else if(  ){
       // Stop the timer when the end point is reached
       Get. snackbar('Trip Alert', 'Trip ended');
       newDistance.value = "0";

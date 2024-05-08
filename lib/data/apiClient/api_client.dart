@@ -67,10 +67,6 @@ class ApiClient extends GetConnect {
         .toList());
   }
 
-
-
-  // test send trips
-
   Future<void> updateTrip(Trip trip) async{
     await firestore.collection('trips').doc(trip.uid).update(trip.toJson());
   }
